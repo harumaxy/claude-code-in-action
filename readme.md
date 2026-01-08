@@ -350,3 +350,40 @@ claude mcp add playwright npx @playwright/mcp@latest
 ```
 /install-github-app
 ```
+
+`Claude` Github App をインストールできる。\
+Claude 有料プランをサブスクしてるなら、 `CLAUDE_CODE_OAUTH_TOKEN` を選択したリポジトリに自動で Secrets に追加できる。
+
+その後、 `.github/workflows` を追加する PR が自動で作成される\
+それをマージすると、 PR 作成時やレビューコメントで `@claude` とメンションすることで Claude Code がレビューしてくれるようになる
+
+また、MCPを使うこともできる\
+ただし、 workflow.yml に settings で MCP 設定を書く必要がある
+
+
+```yaml
+mcp_config: |
+  {
+    "mcpServers": {
+      "playwright": {
+        "command": "npx",
+        "args": [
+          "@playwright/mcp@latest",
+          "--allowed-origins",
+          "localhost:3000;cdn.tailwindcss.com;esm.sh"
+        ]
+      }
+    }
+  }
+```
+
+デフォルトだと、 `claude mcp add <name...> <command...>` 設定のスコープは `--scope=local` にインストールされるっぽいので、複数人開発ならプロジェクトに書いてもいいかも
+
+```sh
+claude mcp add --scope project playwright -- npx @playwright/mcp@latest --allowed-origins "localhost:3000;cdn.tailwindcss.com;esm.sh"
+```
+
+コマンド内にオプションがある場合、 `--` で区切る必要がある\
+`.mcp.json` に追加される
+
+また、 `allowedTools` も設定する
