@@ -205,6 +205,22 @@ Projects are auto-saved in the `onFinish` callback of `streamText` for authentic
 3. Serializes VirtualFileSystem state
 4. Updates project in database
 
+## Custom Commands
+
+This project includes custom Claude Code commands to streamline common tasks. Use these by typing `/` in Claude Code to see available commands:
+
+### Available Commands
+
+**`/audit`** - Update vulnerable dependencies
+- Runs security audit on npm packages
+- Applies updates with appropriate error handling
+- Verifies tests pass after updates
+
+**`/write_tests`** - Generate comprehensive tests
+- Creates tests using Vitest and React Testing Library
+- Follows project conventions (files in `__tests__/` directories)
+- Covers happy paths, edge cases, and error states
+
 ## Environment Variables
 
 Required (optional for development):
