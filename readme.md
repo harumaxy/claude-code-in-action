@@ -261,3 +261,83 @@ AIにも集中力と記憶があることを意識
 > 特定のコンポーネントに焦点を合わせ続ける必要がある複雑なプロジェクト
 
 ## Custom Command
+
+Claude のスラッシュコマンドを自分で作れる。\
+繰り返しタスクに便利
+
+1. `.claude/commands/{command-name}.md` に markdown ファイルを作成
+2. ファイル内に自然言語で実行内容・コマンドを書く
+3. claude を起動して `/command-name` を実行
+
+
+### Custom Command で引数を受け取る
+
+`$ARGUMENTS` プレースホルダを使用して引数を受け取れる
+(他の文字列でも行ける)
+
+正確なパスを指定する必要はない。CLAUDE.md  にプロジェクト構成が書いてあればそれを参照するし、Claude Code は `glob` ツールを持っている
+
+`Search(pattern: "**/hooks/**/use-auth.ts")`
+
+```
+/write_tests the use-auth.ts file in the hooks directory 
+```
+
+### 例
+
+.claude/commands
+  - audit.md : npm audit を実行し、脆弱性のある依存関係があったら audit fix を実行して更新する
+  - write_tests.md : $ARGUMENTS でファイルを指定(厳密にはファイル名でなくて、関数名とかでもいい？)。
+    - 使用するフレームワーク指定(Vitest)
+    - カバレッジ指定(正常系、エッジケース、エラーステート、など)
+    - 実装詳細ではなく振る舞いに焦点を当てる
+      - などの注意点を指定してテストを書ける
+
+
+## MCP Server をインストールする
+
+Model Context Protocol サーバー\
+リモートサーバーと、stdin/out経由で接続するローカル実行ファイルの2種類がある。\
+(開発ツールは後者が主流?)
+
+
+
+### Playwright MCP を Claude Code にインストールする
+
+
+```sh
+claude mcp add playwright npx @playwright/mcp@latest
+# claude mcp add <mcp-server-name> <commands...>
+```
+
+また、MCPのツールを使うには許可が聞かれる\
+`.claude/settings.local.json` に追加される
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm ls:*)",
+      "Bash(cat:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(lsof:*)",
+      "mcp__playwright
+    ]
+  }
+}
+
+```
+
+毎回聞かれるのが嫌な場合、ここを手動で編集して追加してもいい。\
+権限は前方一致なので、 `mcp__playwright` と書いておけば playwright mcp のすべてのツールが許可される
+
+## その他のMCPサーバーを探索探索
+
+- DB インタラクション
+- APIテスト、監視
+- ファイルシステム操作
+- クラウドサービス統合
+- 開発ツール自動化
