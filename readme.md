@@ -341,3 +341,12 @@ claude mcp add playwright npx @playwright/mcp@latest
 - ファイルシステム操作
 - クラウドサービス統合
 - 開発ツール自動化
+
+
+## Github Integration
+
+まず、以下のコマンド
+
+```
+/install-github-app
+```
